@@ -4,13 +4,13 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { archiveTask, pinTask } from "../lib/redux";
 
-export function PureTaskList({ loading, tasks, onPinTask, onArchivedTask }) {
+export function PureTaskList({ loading, tasks, onPinTask, onArchiveTask }) {
   const events = {
     onPinTask,
-    onArchivedTask,
+    onArchiveTask,
   };
 
-  const loadingRow = (
+  const LoadingRow = (
     <div className="loading-item">
       <span className="glow-checkbox" />
       <span className="glow-text">
@@ -24,12 +24,12 @@ export function PureTaskList({ loading, tasks, onPinTask, onArchivedTask }) {
   if (loading) {
     return (
       <div className="list-items">
-        {loadingRow}
-        {loadingRow}
-        {loadingRow}
-        {loadingRow}
-        {loadingRow}
-        {loadingRow}
+        {LoadingRow}
+        {LoadingRow}
+        {LoadingRow}
+        {LoadingRow}
+        {LoadingRow}
+        {LoadingRow}
       </div>
     );
   }
@@ -45,14 +45,14 @@ export function PureTaskList({ loading, tasks, onPinTask, onArchivedTask }) {
       </div>
     );
   }
-  const taskInOrder = [
-    ...tasks.filter((task) => task.state === "TASK_PINNED"),
-    ...tasks.filter((task) => task.state !== "TASK_PINNED"),
+  const tasksInOrder = [
+    ...tasks.filter((t) => t.state === "TASK_PINNED"),
+    ...tasks.filter((t) => t.state !== "TASK_PINNED"),
   ];
 
   return (
     <div className="list-items">
-      {taskInOrder.map((task) => (
+      {tasksInOrder.map((task) => (
         <Task key={task.id} task={task} {...events} />
       ))}
     </div>
@@ -66,8 +66,8 @@ PureTaskList.defaultProps = {
 PureTaskList.propTypes = {
   loading: PropTypes.bool,
   tasks: PropTypes.arrayOf(Task.propTypes.task).isRequired,
-  onPinTask: PropTypes.func,
-  onArchivedTask: PropTypes.func,
+  onPinTask: PropTypes.func.isRequired,
+  onArchivedTask: PropTypes.func.isRequired,
 };
 
 export default connect(
@@ -77,7 +77,7 @@ export default connect(
     ),
   }),
   (dispatch) => ({
-    onArchivedTask: (id) => dispatch(archiveTask(id)),
-    onPinnedTask: (id) => dispatch(pinTask(id)),
+    onArchiveTask: (id) => dispatch(archiveTask(id)),
+    onPinTask: (id) => dispatch(pinTask(id)),
   })
 )(PureTaskList);
